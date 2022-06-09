@@ -42,7 +42,6 @@ cnn.add(kl.Conv2D(
     filters = 64,
     kernel_size = 3,
     activation = 'relu',
-    input_shape=[28,28,1]
 ))
 cnn.add(kl.MaxPool2D(
     pool_size=2,
