@@ -11,7 +11,6 @@ mnist = tf.keras.datasets.mnist
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 
-
 # Normalize
 x_train = x_train / 255
 x_test = x_test / 255
@@ -33,9 +32,12 @@ cnn.add(kl.Conv2D(
 ))
 # Pooling
 cnn.add(kl.MaxPool2D(
-    pool_size=2,
+    pool_size=(2,2),
     strides = 2
 ))
+
+# Dropout layer to help with over fitting
+cnn.add(kl.Dropout(.5))
 
 # Convolution Layer 2
 cnn.add(kl.Conv2D(
@@ -45,14 +47,21 @@ cnn.add(kl.Conv2D(
     input_shape=[28,28,1]
 ))
 cnn.add(kl.MaxPool2D(
-    pool_size=2,
+    pool_size=(2,2),
     strides = 2
 ))
  
+cnn.add(kl.Dropout(.5))
+
 # Flatten Layer
 cnn.add(kl.Flatten())
 
 # Hidden Layers
+cnn.add(kl.Dense(
+    units = 128,
+    activation = 'relu'
+))
+
 cnn.add(kl.Dense(
     units = 256,
     activation = 'relu'
@@ -68,7 +77,7 @@ cnn.add(kl.Dense(
 cnn.compile(optimizer = 'adam', loss = 'sparse_categorical_crossentropy', metrics = ['accuracy'])
 
 # Train
-cnn.fit(x_train,y_train, epochs = 3)
+cnn.fit(x_train, y_train, epochs = 5)
 
 # Evaluate against test set
 cnn.evaluate(x_test,y_test)
